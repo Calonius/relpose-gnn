@@ -6,7 +6,7 @@ import pickle
 import subprocess
 import sys
 from pathlib import Path
-
+import requests
 import numpy as np
 import torch
 import torchvision.transforms as transforms
@@ -26,6 +26,10 @@ from niantic.datasets.graph_structure import GraphStructure
 from niantic.datasets.seven_scenes import SevenScenes
 from path_config import PATH_PROJECT
 
+#Edit because transformation of lambda fails
+def to_torch_tensor(x):
+    print("to_torch_tensor")
+    return torch.from_numpy(x).float()
 
 # ['heads','chess','redkitchen','pumpkin','office', 'fire','stairs']
 class SEVEN_SCENES_multi(Dataset):
@@ -33,16 +37,16 @@ class SEVEN_SCENES_multi(Dataset):
                  device_id: int,
                  transform=None, pre_transform=None,
                  seqs=('heads',), train=True, seq_len=8, graph_structure='fc',
-                 DATA_PATH=None,
-                 DATA_PATH_IR=None,
-                 GT_PATH= 'data/7scenes',
+                 DATA_PATH="C:\\Users\\andre\\VPR\\relpose-gnn\\data\\7scenes",
+                 DATA_PATH_IR="C:\\Users\\andre\\VPR\\relpose-gnn\\data\\7scenes-rw",
+                 GT_PATH=PATH_PROJECT / 'data' / '7scenes',
                  fps_sub=1,
                  database_set='train',
                  sampling_period=5,
                  excluded_scenes=None,
                  cross_connect=False,
                  retrieval_mode='IR',
-                 num_workers: int = 8
+                 num_workers: int = 8,
                  ):
 
         logger.info(f'graph data path: {root}')
@@ -128,11 +132,11 @@ class SEVEN_SCENES_multi(Dataset):
         self.netvlad_checkpoint = \
             Path(os.environ.get('TORCH_HOME', PATH_PROJECT / 'models')) / 'netvlad_vgg16.tar'
         if not (self.netvlad_checkpoint.is_file() or self.netvlad_checkpoint.is_symlink()):
-            cmd = (
-            'wget', 'https://storage.googleapis.com/niantic-lon-static/research/relpose-gnn/models/netvlad_vgg16.tar',
-            '-O', self.netvlad_checkpoint)
+            url = 'https://storage.googleapis.com/niantic-lon-static/research/relpose-gnn/models/netvlad_vgg16.tar'
+            response = requests.get(url)
             self.netvlad_checkpoint.parent.mkdir(parents=True, exist_ok=True)
-            subprocess.check_call(cmd)
+            with open(self.netvlad_checkpoint, 'wb') as f:
+                f.write(response.content)
 
         super(SEVEN_SCENES_multi, self).__init__(root, transform, pre_transform)
 
@@ -296,7 +300,8 @@ class SEVEN_SCENES_multi(Dataset):
                 transforms.ToTensor(),
                 transforms.Normalize(mean=stats[0], std=np.sqrt(stats[1]))
             ])
-            target_transform = transforms.Lambda(lambda x: torch.from_numpy(x).float())
+            target_transform = transforms.Lambda(to_torch_tensor)
+            #target_transform = transforms.Lambda(lambda x: torch.from_numpy(x).float())
 
             dset = SevenScenes(seq, self.DATA_PATH, train=self.train, transform=transform,
                                target_transform=target_transform, mode=self.mode)

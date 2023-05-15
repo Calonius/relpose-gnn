@@ -23,6 +23,7 @@ from seq_data.tum_rgbd.tum_seq2ares import export_to_tum_format, \
 
 def re_organize(seq_path):
     rgb_dir = os.path.join(seq_path, 'rgb')
+
     if not os.path.exists(rgb_dir):
         os.mkdir(rgb_dir)
 
@@ -33,7 +34,6 @@ def re_organize(seq_path):
     poses_dir = os.path.join(seq_path, 'poses')
     if not os.path.exists(poses_dir):
         os.mkdir(poses_dir)
-
     seqs = sorted(glob.glob(os.path.join(seq_path, '*.pose.txt')))
     seq_names = [seq.split('/')[-1].split('.pose.txt')[0] for seq in seqs]
     for seq_name in seq_names:
@@ -43,7 +43,7 @@ def re_organize(seq_path):
                     os.path.join(seq_path, 'depth', '%s.depth.png' % seq_name))
         shutil.move(os.path.join(seq_path, '%s.pose.txt' % seq_name),
                     os.path.join(seq_path, 'poses', '%s.pose.txt' % seq_name))
-    os.system('rm %s' % os.path.join(seq_path, 'Thumbs.db'))
+    #os.system('del %s' % os.path.join(seq_path, 'Thumbs.db'))
 
 
 def scenes2ares(seq_path: Path, seq_name: str):
@@ -55,13 +55,13 @@ def scenes2ares(seq_path: Path, seq_name: str):
 
     # Aron's case:
     if not rgb_dir.is_dir():
-        rgb_dir = path_seq
+       rgb_dir = path_seq
     if not depth_dir.is_dir():
         depth_dir = path_seq
     if not poses_dir.is_dir():
         poses_dir = path_seq
 
-    # frames = sorted(glob.glob(os.path.join(rgb_dir, '*.color.png')))
+    #frames = sorted(glob.glob(os.path.join(rgb_dir, '*.color.png')))
     frames = sorted(rgb_dir.glob('*.color.png'),
                     key=lambda p: int(p.stem.split('.')[0].split('-')[1]))
     frame_names = tuple(seq.name.split('.')[0] for seq in frames)
@@ -131,6 +131,7 @@ if __name__ == '__main__':
         if not os.path.isdir(seq_path):
             continue
         seq_num = seq_path.name
+        print
 
         # Try naively first
         seq = scenes2ares(seq_path.parent.parent, Path(seq_name) / seq_num)

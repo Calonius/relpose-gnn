@@ -8,13 +8,14 @@ Example call:
      --gpu 0 \
      --test-scene "${SCENE}"
 """
+import torch
 import argparse
 import random
 import re
 import sys
 from pathlib import Path
 import os.path as osp
-
+sys.path.append('C:\\Users\\andre\\miniconda3\\envs\\relpose_gnn\\lib\\site-packages')
 import numpy as np
 import torch
 from loguru import logger
@@ -41,6 +42,11 @@ def save_poses(pred_poses: np.ndarray, rel_paths: list, p_output: Path, target_p
     np.savez(p_output, rel_path=rel_paths, abs_t=pred_poses[:, :3], abs_q=pred_poses[:, 3:],
              targ_t=target_poses[:, :3], targ_q=target_poses[:, 3:])
 
+# See https://pytorch.org/docs/stable/notes/randomness.html
+def seed_worker(worker_id):
+    worker_seed = torch.initial_seed() % 2 ** 32
+    np.random.seed(worker_seed)
+    random.seed(worker_seed)
 
 class MultiModelTrainer:
     def __init__(self, args):
@@ -180,12 +186,6 @@ class MultiModelTrainer:
     def eval_RP(self, data_set, weights: Path, ref_node: int = 0, set: str = 'test', scene: str = 'heads'):
         self.model.eval()
 
-        # See https://pytorch.org/docs/stable/notes/randomness.html
-        def seed_worker(worker_id):
-            worker_seed = torch.initial_seed() % 2 ** 32
-            np.random.seed(worker_seed)
-            random.seed(worker_seed)
-
         g = torch.Generator()
         g.manual_seed(torch.initial_seed())
 
@@ -308,8 +308,8 @@ def _parse_args(argv):
     parser.add_argument('--knn', default=4, help='knn', type=int)
     parser.add_argument('--droprate', type=float, help='Droprate', default=0.5)
     parser.add_argument('--gpu', default=None, help='GpuId', type=int)
-    parser.add_argument('--seed', default=999, help='random seed', type=int)
-
+    parser.add_argument('--seed', default=999, help='random seed', type=int)   
+    print(argv)
     args = parser.parse_args(argv)
     if not hasattr(args, 'saq') or args.saq is None:
         setattr(args, 'saq', args.srq)

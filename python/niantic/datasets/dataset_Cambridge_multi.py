@@ -10,6 +10,7 @@ import numpy as np
 import torch
 import torchvision.transforms as transforms
 from torch_geometric.data import Data, Dataset, DataLoader
+sys.path.append('C:/Users/andre/VPR/relpose-gnn/python/external/VLAD/VLADlib')
 from external.VLAD.VLADlib.VLAD import query
 from niantic.datasets.cambridge_landmark import CambridgeLandmark
 

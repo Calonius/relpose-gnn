@@ -9,6 +9,8 @@ from sklearn.neighbors import BallTree
 import pickle
 import glob
 import cv2
+import sys
+sys.path.append('C:/Users/andre/VPR/relpose-gnn/python/external/VLAD/')
 from VLADlib.Descriptors import *
 
 

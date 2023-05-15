@@ -16,7 +16,8 @@ def export_tum_img_info(frames: FrameSeqData, rgb_output_path, depth_output_path
             if timestamp == 'None':
                 continue
             tokens = frame['file_name'].split('/')
-            img_dir_name = tokens[-2]
+            print(tokens)
+            img_dir_name = tokens[-1]
             img_name = tokens[-1]
             # depth_name = frame['depth_file_name']
             out_f.write(timestamp + ' ')
@@ -31,7 +32,7 @@ def export_tum_img_info(frames: FrameSeqData, rgb_output_path, depth_output_path
             if timestamp == 'None':
                 continue
             tokens = frame['depth_file_name'].split('/')
-            depth_dir_name = tokens[-2]
+            depth_dir_name = tokens[-1]
             depth_name = tokens[-1]
             out_f.write(timestamp + ' ')
             out_f.write(os.path.join(depth_dir_name, depth_name) + '\n')
@@ -150,7 +151,6 @@ if __name__ == '__main__':
     # for dir in dirs:
     #     if os.path.isdir(dir):
     #         seq_name = dir.split('/')[-1]
-    print(seq_name)
     tum_rgbd_seq2ares(base_dir,
                       seq_name,
                       out_ares_json_path=os.path.join(base_dir, seq_name, 'seq.json'))
