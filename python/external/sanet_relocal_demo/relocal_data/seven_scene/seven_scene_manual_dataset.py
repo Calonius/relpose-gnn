@@ -31,8 +31,13 @@ class SevenSceneManualDataset(Dataset):
         self.shuffle_list = shuffle_list
         self.nsample_per_group = nsample_per_group
 
-        self.depth_k = np.asarray([[585, 0, 320], [0, 585, 240], [0, 0, 1]], dtype=np.float32)
-        self.img_k = np.asarray([[525, 0, 320], [0, 525, 240], [0, 0, 1]], dtype=np.float32)
+        #Camera depth of MIMIR dataset
+        self.depth_k = np.asarray([[585, 0, 360], [0, 585, 270], [0, 0, 1]], dtype=np.float32)
+        self.img_k = np.asarray([[525, 0, 360], [0, 525, 270], [0, 0, 1]], dtype=np.float32)
+
+        #Camera depth of 7scenes dataset
+        #self.depth_k = np.asarray([[585, 0, 320], [0, 585, 240], [0, 0, 1]], dtype=np.float32)
+        #self.img_k = np.asarray([[525, 0, 320], [0, 525, 240], [0, 0, 1]], dtype=np.float32)
 
     def __len__(self):
         return len(self.seq_frame_list) // self.nsample_per_group

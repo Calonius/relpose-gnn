@@ -15,9 +15,8 @@ def export_tum_img_info(frames: FrameSeqData, rgb_output_path, depth_output_path
             timestamp = str(frame['timestamp'])
             if timestamp == 'None':
                 continue
-            tokens = frame['file_name'].split('/')
-            print(tokens)
-            img_dir_name = tokens[-1]
+            tokens = frame['file_name'].split('\\')
+            img_dir_name = tokens[-2]
             img_name = tokens[-1]
             # depth_name = frame['depth_file_name']
             out_f.write(timestamp + ' ')
@@ -31,8 +30,8 @@ def export_tum_img_info(frames: FrameSeqData, rgb_output_path, depth_output_path
             timestamp = str(frame['timestamp'])
             if timestamp == 'None':
                 continue
-            tokens = frame['depth_file_name'].split('/')
-            depth_dir_name = tokens[-1]
+            tokens = frame['depth_file_name'].split('\\')
+            depth_dir_name = tokens[-2]
             depth_name = tokens[-1]
             out_f.write(timestamp + ' ')
             out_f.write(os.path.join(depth_dir_name, depth_name) + '\n')

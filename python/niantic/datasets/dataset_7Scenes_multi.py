@@ -15,7 +15,10 @@ from sklearn.metrics.pairwise import cosine_similarity as cos_sim
 from torch.utils import data as torch_data
 from torch_geometric.data import Data, Dataset, DataLoader
 from tqdm import tqdm
-
+p_parent = Path(__file__).parent.resolve()
+p_python = str(Path(*p_parent.parts[:p_parent.parts.index('niantic')]))
+if p_python not in sys.path:
+    sys.path.insert(0, p_python)
 from external.sanet_relocal_demo.reloc_pipeline.util_func import \
     preprocess_scene, x_2d_coords_torch, preprocess_query
 from external.sanet_relocal_demo.relocal.vlad_encoder import VLADEncoder
@@ -28,7 +31,6 @@ from path_config import PATH_PROJECT
 
 #Edit because transformation of lambda fails
 def to_torch_tensor(x):
-    print("to_torch_tensor")
     return torch.from_numpy(x).float()
 
 # ['heads','chess','redkitchen','pumpkin','office', 'fire','stairs']
@@ -37,8 +39,8 @@ class SEVEN_SCENES_multi(Dataset):
                  device_id: int,
                  transform=None, pre_transform=None,
                  seqs=('heads',), train=True, seq_len=8, graph_structure='fc',
-                 DATA_PATH="C:\\Users\\andre\\VPR\\relpose-gnn\\data\\7scenes",
-                 DATA_PATH_IR="C:\\Users\\andre\\VPR\\relpose-gnn\\data\\7scenes-rw",
+                 DATA_PATH="C:\\Users\\andreas\\VPR\\relpose-gnn\\data\\7scenes",
+                 DATA_PATH_IR="C:\\Users\\andreas\\VPR\\relpose-gnn\\data\\7scenes-rw",
                  GT_PATH=PATH_PROJECT / 'data' / '7scenes',
                  fps_sub=1,
                  database_set='train',

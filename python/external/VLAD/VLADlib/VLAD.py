@@ -10,7 +10,7 @@ import pickle
 import glob
 import cv2
 import sys
-sys.path.append('C:/Users/andre/VPR/relpose-gnn/python/external/VLAD/')
+sys.path.append('C:/Users/andreas/VPR/relpose-gnn/python/external/VLAD/')
 from VLADlib.Descriptors import *
 
 

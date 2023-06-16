@@ -66,7 +66,8 @@ def scenes2ares(seq_path: Path, seq_name: str):
                     key=lambda p: int(p.stem.split('.')[0].split('-')[1]))
     frame_names = tuple(seq.name.split('.')[0] for seq in frames)
 
-    default_intrinsic = np.asarray([585., 585., 320., 240., 0, 0], dtype=np.float32)
+    #default_intrinsic = np.asarray([585., 585., 320., 240., 0, 0], dtype=np.float32)
+    default_intrinsic = np.asarray([585., 585., 360., 270., 0, 0], dtype=np.float32)
 
     frame_seq_data = FrameSeqData()
 
@@ -98,7 +99,9 @@ def scenes2ares(seq_path: Path, seq_name: str):
             # os.path.join(seq_name, 'rgb', f'{frame_name}.color.png'),
             Tcw=Tcw,
             camera_intrinsic=default_intrinsic,
-            frame_dim=(480, 640),
+            #frame_dim=(480, 640),
+            #changed frame dim for MIMIR
+            frame_dim=(720,540),
             time_stamp=timestamp,
             depth_file_name=str(
                 depth_file_name))  # os.path.join(seq_name, 'depth', f'{frame_name}.depth.png'))

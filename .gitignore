@@ -1,3 +1,13 @@
 __pycache__
 *.png
 *.txt
+*.pt
+*.pfm
+*.yaml
+*.csv
+*.zip
+*.tar
+*.log
+*.json
+*.lzma
+*.bin

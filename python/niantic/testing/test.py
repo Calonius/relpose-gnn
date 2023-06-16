@@ -8,14 +8,12 @@ Example call:
      --gpu 0 \
      --test-scene "${SCENE}"
 """
-import torch
 import argparse
 import random
 import re
 import sys
 from pathlib import Path
 import os.path as osp
-sys.path.append('C:\\Users\\andre\\miniconda3\\envs\\relpose_gnn\\lib\\site-packages')
 import numpy as np
 import torch
 from loguru import logger
